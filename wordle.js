@@ -13,7 +13,7 @@ async function init() {
         } else {
             currentGuess = currentGuess.substring(0, currentGuess.length -1) + letter;
         }
-        letters[currentGuess.length - 1].innerText = letter;
+        letters[ANSWER_LENGTH * row + currentGuess.length - 1].innerText = letter;
     }
 
     document.addEventListener('keydown', function handleKeyDown (event) {
