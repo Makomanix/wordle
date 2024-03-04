@@ -5,7 +5,14 @@ const ANSWER_LENGTH = 5;
 async function init() {
     
     let currentGuess = "";
-    let row = 0;
+    let currentRow = 0;
+    const wordURL = 'https://words.dev-apis.com/word-of-the-day';
+
+    const res = await fetch(wordURL);
+    const resObj = await res.json();
+    const word = resObj.word.toUpperCase();
+
+    console.log(word);
 
     function addLetter(letter) {
         if ( currentGuess.length < ANSWER_LENGTH ) {
@@ -13,19 +20,24 @@ async function init() {
         } else {
             currentGuess = currentGuess.substring(0, currentGuess.length -1) + letter;
         }
-        letters[ANSWER_LENGTH * row + currentGuess.length - 1].innerText = letter;
+        letters[ANSWER_LENGTH * currentRow + currentGuess.length - 1].innerText = letter;
     }
 
     function submit() {
+
+        if (currentGuess.length !== ANSWER_LENGTH) {
+            return;
+        }
+
         if (currentGuess.length == ANSWER_LENGTH) {
-            row++;
+            currentRow++;
             currentGuess = '';
         }
     };
 
     function backspace() {
         if (currentGuess !== '') {
-            letters[ANSWER_LENGTH * row + currentGuess.length - 1].innerText = '';
+            letters[ANSWER_LENGTH * currentRow + currentGuess.length - 1].innerText = '';
             currentGuess = currentGuess.substring(0, currentGuess.length - 1);
         }
     };
