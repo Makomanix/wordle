@@ -55,7 +55,7 @@ body {
 
 .letter {
     display: flex;
-    height: 5em;
+    height: 4rem;
     width: 80%;
     justify-content: center;
     align-items: center;
@@ -85,6 +85,6 @@ body {
     justify-content: center;
     align-items: center;
     outline: solid;
-    height: 3rem;
+    height: 4rem;
     width: 4rem;
 }
