@@ -8,27 +8,37 @@ console.log(keyValueArray);
 
 async function init() {
 
-    document.addEventListener('keyup', function handleKeyup (event) {
+    function addLetter(letter) {
+
+    }
+
+    async function submit() {
+
+    }
+
+    function backspace() {
         
-        if ( !isLetter(event.key)) {
-            return
+    }
+
+    document.addEventListener("keyup", function handleKeyup(event) {
+        let key = event.key;
+
+        console.log(key);
+        
+        if (key === 'Enter') {
+            submit();
+        } else if (key === 'Backspace') {
+            backspace();
+        } else if (isLetter(key)) {
+            addLetter(key.toUpperCase)
         }
-        
-        highlight(event.key);
 
-        function addLetter(){
+        // if (!isLetter(key)) {
+        //     return;
+        // }
 
-        };
-
-        async function submit() {
-
-        };
-
-        function backspace() {
-
-        };
-
-    })
+        highlight(key);
+    });
 };
 
 
