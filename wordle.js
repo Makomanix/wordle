@@ -16,6 +16,18 @@ async function init() {
         
         highlight(event.key);
 
+        function addLetter(){
+
+        };
+
+        async function submit() {
+
+        };
+
+        function backspace() {
+
+        };
+
     })
 };
 
