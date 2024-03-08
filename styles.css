@@ -88,3 +88,7 @@ body {
     height: 4rem;
     width: 4rem;
 }
+
+.target {
+    background-color: aqua;
+}
