@@ -25,12 +25,21 @@ async function init() {
     }
 
     async function submit() {
+        // end games after 6 guesses
         currentRow += 1;
         currentGuess = '';
     }
 
     function backspace() {
-        
+        if ( currentGuess === '') {
+            return;
+        } else {
+            currentGuess = currentGuess.substring(0, currentGuess.length - 1)
+            letters[ANSWER_LENGTH * currentRow + currentGuess.length].innerText = "";
+            console.log(currentGuess.length);
+            console.log(currentGuess);
+            
+        }
     }
 
     document.addEventListener("keydown", function handleKeydown(event) {
