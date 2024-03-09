@@ -2,25 +2,38 @@ const letters = document.querySelectorAll('.letter');
 const keys = document.querySelectorAll('.key');
 const keyValueArray = Array.from(keys).map((key) => {
     return key.innerText.toLowerCase();
-})
+});
 
-console.log(keyValueArray);
+const ANSWER_LENGTH = 5;
+
+// console.log(letters[1].innerText = "K");
 
 async function init() {
+    let currentGuess = '';
+    let currentRow = 0;
 
     function addLetter(letter) {
-
+        console.log(letter)
+        if ( currentGuess.length === ANSWER_LENGTH ) {
+            currentGuess = currentGuess.substring(0, currentGuess.length - 1) + letter;
+            // letters[ANSWER_LENGTH * currentRow + currentGuess.length - 1] = letter;
+        } else {
+            currentGuess += letter;
+            // letters[ANSWER_LENGTH * currentRow + currentGuess.length - 1] = letter;
+        }
+        letters[ANSWER_LENGTH * currentRow + currentGuess.length - 1].innerText = letter;
     }
 
     async function submit() {
-
+        currentRow += 1;
+        currentGuess = '';
     }
 
     function backspace() {
         
     }
 
-    document.addEventListener("keyup", function handleKeyup(event) {
+    document.addEventListener("keydown", function handleKeydown(event) {
         let key = event.key;
 
         console.log(key);
@@ -30,14 +43,14 @@ async function init() {
         } else if (key === 'Backspace') {
             backspace();
         } else if (isLetter(key)) {
-            addLetter(key.toUpperCase)
+            addLetter(key.toUpperCase())
+            highlight(key);
         }
 
         // if (!isLetter(key)) {
         //     return;
         // }
 
-        highlight(key);
     });
 };
 
@@ -53,7 +66,7 @@ function highlight(key) {
 
     setTimeout(() => {
         keys[keyIndex].classList.toggle("target");
-    }, 50);
+    }, 150);
 };
 
 
