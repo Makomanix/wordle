@@ -32,13 +32,10 @@ async function init() {
 
     function backspace() {
         if ( currentGuess === '') {
-            return;
+            // do nothing
         } else {
             currentGuess = currentGuess.substring(0, currentGuess.length - 1)
-            letters[ANSWER_LENGTH * currentRow + currentGuess.length].innerText = "";
-            console.log(currentGuess.length);
-            console.log(currentGuess);
-            
+            letters[ANSWER_LENGTH * currentRow + currentGuess.length].innerText = "";            
         }
     }
 
@@ -55,10 +52,6 @@ async function init() {
             addLetter(key.toUpperCase())
             highlight(key);
         }
-
-        // if (!isLetter(key)) {
-        //     return;
-        // }
 
     });
 };
