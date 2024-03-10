@@ -92,3 +92,8 @@ body {
 .target {
     background-color: aqua;
 }
+
+.invalid {
+    outline-color: red;
+    outline-width: thick;
+}
