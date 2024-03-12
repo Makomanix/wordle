@@ -6,6 +6,10 @@ const keyValueArray = Array.from(keys).map((key) => {
     return key.innerText.toLowerCase();
 });
 
+// console.log(letters);
+// console.log(keys);
+// console.log(keyValueArray);
+
 
 async function init() {
     let currentGuess = '';
@@ -15,14 +19,10 @@ async function init() {
     const res = await fetch ('https://words.dev-apis.com/word-of-the-day');
     const resObj = await res.json();
     const word = resObj.word.toUpperCase();
-    
-    console.log(word);
-
-    let wordParts = getMap(word);
-    console.log(wordParts);
+    const wordParts = word.split('');
 
     function addLetter(letter) {
-        console.log(letter)
+        // console.log(letter)
         if ( currentGuess.length === ANSWER_LENGTH ) {
             currentGuess = currentGuess.substring(0, currentGuess.length - 1) + letter;
         } else {
@@ -41,15 +41,45 @@ async function init() {
             method: "POST",
             body: JSON.stringify({ word: currentGuess }),
         });
-        const resObj = res.json();
+        const resObj = await res.json();
         const validWord = resObj.validWord;
+        // console.log(validWord);
 
         if ( !validWord ) {
             markInvalid();
-            // indicate to user word is invalid
             return;
         }
+
+        let guessParts = currentGuess.split('');
+        let map = getMap(word);
+
         // compare guess to word
+        for ( let i = 0; i < ANSWER_LENGTH; i++ ) {
+            if ( wordParts[i] === guessParts[i] ) {
+                letters[ANSWER_LENGTH * currentRow + i].classList.add('correct');
+                map[wordParts[i]]--;
+                paintKey(guessParts[i], 'correct')
+            }
+        }
+        
+        for ( let i = 0; i < ANSWER_LENGTH; i++ ) {
+            if ( wordParts[i] === guessParts[i] ) {
+                // do nothing
+            } else if ( wordParts.includes(guessParts[i]) && map[guessParts[i]] > 0 ) {
+                letters[ANSWER_LENGTH * currentRow + i].classList.add('close');
+                map[guessParts[i]]--;
+                paintKey(guessParts[i], 'close');
+                // console.log('YELLOW');
+            } else if ( !wordParts.includes(guessParts[i]) || map[guessParts[i]] === 0 ) {
+                letters[ANSWER_LENGTH * currentRow + i].classList.add('wrong');
+                paintKey(guessParts[i], 'wrong');
+                // console.log(map[wordParts[i]]);
+                // console.log('gray');
+            }
+        }
+
+
+
         // end games after 6 guesses
         currentRow += 1;
         currentGuess = '';
@@ -57,7 +87,7 @@ async function init() {
 
     function backspace() {
         if ( currentGuess === '') {
-            // do nothing
+            return;
         } else {
             currentGuess = currentGuess.substring(0, currentGuess.length - 1)
             letters[ANSWER_LENGTH * currentRow + currentGuess.length].innerText = "";            
@@ -70,7 +100,7 @@ async function init() {
     
             setTimeout(() => {
                 letters[ANSWER_LENGTH * currentRow + i].classList.toggle('invalid');
-            }, 100);
+            }, 200);
         }
     }
 
@@ -102,6 +132,20 @@ function highlight(key) {
         keys[keyIndex].classList.toggle("target");
     }, 150);
 };
+
+// let painted = '';
+
+function paintKey(letter, color) {
+    
+    letter = letter.toLowerCase();
+    // if (!painted.includes(letter)) {
+    let keyIndex = keyValueArray.indexOf(letter);
+    keys[keyIndex].classList.add(`${color}`);
+    // painted += letter;
+    console.log(letter)
+    console.log(keyIndex);
+    // }
+}
 
 
 function getMap(word) {

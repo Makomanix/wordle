@@ -95,5 +95,17 @@ body {
 
 .invalid {
     outline-color: red;
-    outline-width: thick;
+    outline-width: medium;
+}
+
+.wrong {
+    background-color: slategray;
+}
+
+.close {
+    background: yellow;
+}
+
+.correct {
+    background-color: green;
 }
