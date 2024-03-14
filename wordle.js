@@ -17,7 +17,8 @@ async function init() {
 
     toggleLoading();
     
-    const res = await fetch ('https://words.dev-apis.com/word-of-the-day');
+    // fetch word of the day
+    const res = await fetch ('https://words.dev-apis.com/word-of-the-day?random=1');
     const resObj = await res.json();
     const word = resObj.word.toUpperCase();
     const wordParts = word.split('');
@@ -59,12 +60,8 @@ async function init() {
         let guessParts = currentGuess.split('');
         let map = getMap(word);
 
-        if (currentGuess === word) {
-            gameOver = true;
-            announcement.classList.add('announceWinner');
-        }
-
-        // compare guess to word
+        
+        // compare guess to word and mark correct letters only
         for ( let i = 0; i < ANSWER_LENGTH; i++ ) {
             if ( wordParts[i] === guessParts[i] ) {
                 letters[ANSWER_LENGTH * currentRow + i].classList.add('correct');
@@ -73,6 +70,7 @@ async function init() {
             }
         }
         
+        // compare guess to work and mark close and incorrect
         for ( let i = 0; i < ANSWER_LENGTH; i++ ) {
             if ( wordParts[i] === guessParts[i] ) {
                 // do nothing
@@ -80,22 +78,24 @@ async function init() {
                 letters[ANSWER_LENGTH * currentRow + i].classList.add('close');
                 map[guessParts[i]]--;
                 paintKey(guessParts[i], 'close');
-                // console.log('YELLOW');
             } else if ( !wordParts.includes(guessParts[i]) || map[guessParts[i]] === 0 ) {
                 letters[ANSWER_LENGTH * currentRow + i].classList.add('wrong');
                 paintKey(guessParts[i], 'wrong');
-                // console.log(map[wordParts[i]]);
-                // console.log('gray');
             }
         }
-
-
+        
+        if (currentGuess === word) {
+            gameOver = true;
+            announcement.classList.add('announceWinner');
+            return;
+        }
 
         // end games after 6 guesses
         if ( currentRow === 5){
             gameOver = true;
             announcement.innerText = `THE WORD WAS ${word}`;
             announcement.classList.add('announceFailed');
+            return;
         }
 
         currentRow += 1;
