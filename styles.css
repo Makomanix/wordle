@@ -30,10 +30,35 @@ body {
     visibility: hidden;
     font-size: xx-large;
     color: red;
+    animation: spin 2500ms linear infinite;
+}
+
+.show {
+    visibility: visible;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }   
 }
 
 .announcement {
+    font-size: xx-large;
+    visibility: hidden;
+}
 
+.announceWinner {
+    visibility: visible;
+    
+
+}
+
+.announceFailed {
+    visibility: visible;
 }
 
 .game {
@@ -61,6 +86,7 @@ body {
     align-items: center;
     outline: solid;
     margin: auto;
+    font-size: x-large;
     margin-top: 1rem;
 }
 
@@ -99,7 +125,7 @@ body {
 }
 
 .wrong {
-    background-color: slategray;
+    background-color: lightgray;
 }
 
 .close {

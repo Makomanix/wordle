@@ -1,28 +1,30 @@
 const ANSWER_LENGTH = 5;
 const GUESSES = 6;
+const announcement = document.querySelector('.announcement');
+const loading = document.querySelector('.loadingDiv');
 const letters = document.querySelectorAll('.letter');
 const keys = document.querySelectorAll('.key');
 const keyValueArray = Array.from(keys).map((key) => {
     return key.innerText.toLowerCase();
 });
 
-// console.log(letters);
-// console.log(keys);
-// console.log(keyValueArray);
-
 
 async function init() {
+
+    let gameOver = false;
     let currentGuess = '';
     let currentRow = 0;
-    
+
+    toggleLoading();
     
     const res = await fetch ('https://words.dev-apis.com/word-of-the-day');
     const resObj = await res.json();
     const word = resObj.word.toUpperCase();
     const wordParts = word.split('');
 
+    toggleLoading();
+
     function addLetter(letter) {
-        // console.log(letter)
         if ( currentGuess.length === ANSWER_LENGTH ) {
             currentGuess = currentGuess.substring(0, currentGuess.length - 1) + letter;
         } else {
@@ -32,9 +34,12 @@ async function init() {
     }
 
     async function submit() {
-        if ( currentGuess.length !== ANSWER_LENGTH) {
+
+        if ( currentGuess.length !== ANSWER_LENGTH ) {
             return;
         }
+
+        toggleLoading();
 
         // validate word
         const res = await fetch ('https://words.dev-apis.com/validate-word', {
@@ -43,7 +48,8 @@ async function init() {
         });
         const resObj = await res.json();
         const validWord = resObj.validWord;
-        // console.log(validWord);
+
+        toggleLoading();
 
         if ( !validWord ) {
             markInvalid();
@@ -52,6 +58,11 @@ async function init() {
 
         let guessParts = currentGuess.split('');
         let map = getMap(word);
+
+        if (currentGuess === word) {
+            gameOver = true;
+            announcement.classList.add('announceWinner');
+        }
 
         // compare guess to word
         for ( let i = 0; i < ANSWER_LENGTH; i++ ) {
@@ -81,6 +92,12 @@ async function init() {
 
 
         // end games after 6 guesses
+        if ( currentRow === 5){
+            gameOver = true;
+            announcement.innerText = `THE WORD WAS ${word}`;
+            announcement.classList.add('announceFailed');
+        }
+
         currentRow += 1;
         currentGuess = '';
     }
@@ -104,7 +121,13 @@ async function init() {
         }
     }
 
+
     document.addEventListener("keydown", function handleKeydown(event) {
+
+        if ( gameOver ) {
+            return;
+        }
+        
         let key = event.key;
 
         if (key === 'Enter') {
@@ -123,7 +146,7 @@ function isLetter(letter){
     return /^[a-zA-Z]$/.test(letter);
 };
 
-
+// flashes keyboard letters corresponding to typing
 function highlight(key) {
     let keyIndex = keyValueArray.indexOf(key);
     keys[keyIndex].classList.toggle("target");
@@ -133,21 +156,14 @@ function highlight(key) {
     }, 150);
 };
 
-// let painted = '';
-
-function paintKey(letter, color) {
-    
+// adds color to the keyboard icons, css cascade order to prioritize correct color
+function paintKey(letter, color) {   
     letter = letter.toLowerCase();
-    // if (!painted.includes(letter)) {
     let keyIndex = keyValueArray.indexOf(letter);
     keys[keyIndex].classList.add(`${color}`);
-    // painted += letter;
-    console.log(letter)
-    console.log(keyIndex);
-    // }
 }
 
-
+// creating a count of each letter in word
 function getMap(word) {
     const obj = {};
     for ( let i = 0; i < word.length; i ++) {
@@ -160,5 +176,9 @@ function getMap(word) {
     }
     return obj;
 };
+
+function toggleLoading(){
+    loading.classList.toggle('show');
+}
 
 init();
