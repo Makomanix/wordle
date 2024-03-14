@@ -52,9 +52,34 @@ body {
 }
 
 .announceWinner {
+    font-weight: 900;
     visibility: visible;
-    
+    animation: rainbow 5s linear infinite;    
+}
 
+@keyframes rainbow {
+    100%,
+    0% {
+        color: red;
+    }
+    15% {
+        color: orange;
+    }
+    30% {
+        color: yellow;
+    }
+    45% {
+        color: green;
+    }
+    60% {
+        color: blue;
+    }
+    75% {
+        color: indigo;
+    }
+    90% {
+        color: violet;
+    }    
 }
 
 .announceFailed {
